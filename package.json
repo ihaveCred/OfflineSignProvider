@@ -1,0 +1,14 @@
+{
+  "name": "offlinesignprovider",
+  "version": "0.2.1",
+  "description": "offlinesignprovider",
+  "main": "index.js",
+  "author": {
+    "name": "libracredit"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "web3": "^0.20.6",
+    "web3-provider-engine": "^13.7.0"
+  }
+}
