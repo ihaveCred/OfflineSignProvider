@@ -9,7 +9,6 @@ const url = require('url');
 const Web3 = require("web3");
 const ethUtil = require('ethereumjs-util');
 const aesutil = require("./util/aesutil");
-const config = require('./config');
 
 function OfflineSignProvider(provider_url, sign_service_url, accounts, aesKey, enableZeroEx) {
 
@@ -45,23 +44,31 @@ function OfflineSignProvider(provider_url, sign_service_url, accounts, aesKey, e
                     result += body;
                 });
                 res.on("end", () => {
-                    //TODO½âÎö
+                    //TODO
                     var resultJson = JSON.parse(result);
 
 
-                    var rsvJsonStr = aesutil.decryption(resultJson.data.signedTransaction, config.aesKey);
-                    console.log("½âÃÜºóµÄÊı¾İStr: ");
-                    console.log(JSON.stringify(rsvJsonStr));
-
-                    var rsvJsonData = JSON.parse(rsvJsonStr);
-                    var signedData = rsvJsonData.r + rsvJsonData.s + rsvJsonData.v
-                    console.log("×éºÏºóµÄÇ©ÃûÊı¾İ:");
-                    console.log(signedData);
-
-                    if (!signedData.startsWith('0x')){
-                        cb('0x' + signedData);
+                    if (resultJson.code != 0){
+                        cb("ç­¾åæœåŠ¡å‡ºé”™: " + resultJson.message);
                     }else {
-                        cb(signedData);//·µ»Ø
+                        var rsvJsonStr = aesutil.decryption(resultJson.data.signedTransaction, aesKey);
+                        console.log("è§£å¯†åçš„æ•°æ®Str: ");
+                        console.log(JSON.stringify(rsvJsonStr));
+
+                        var rsvJsonData = JSON.parse(rsvJsonStr);
+                        var signedData = rsvJsonData.r + rsvJsonData.s;
+                        console.log("ç­¾åäº¤æ˜“æ•°æ®:");
+                        console.log(signedData);
+
+                        var v = web3.toDecimal(rsvJsonData.v) - 27;
+
+                        signedData = signedData + '0' + v;
+
+                        if (!signedData.startsWith('0x')){
+                            cb('0x' + signedData);
+                        }else {
+                            cb(signedData);//
+                        }
                     }
 
                 });
@@ -73,6 +80,13 @@ function OfflineSignProvider(provider_url, sign_service_url, accounts, aesKey, e
 
             let enc = aesutil.encryption(JSON.stringify(txParams), aesKey);
             let txObj = { address: txParams.from, transaction: enc };
+
+            console.log("äº¤æ˜“æ˜æ–‡ï¼š");
+            console.log(JSON.stringify(txParams));
+
+            console.log('å‘é€äº¤æ˜“ï¼š');
+            console.log(JSON.stringify(txObj));
+
             req.write(JSON.stringify(txObj));
             req.on('error', function (e) {
                 console.log(e)
@@ -106,7 +120,8 @@ function OfflineSignProvider(provider_url, sign_service_url, accounts, aesKey, e
                 headers: {
                     'Content-Type': 'application/json',
                     "Timestamp": new Date().getTime(),
-                    "Version": "1.0"
+                    "Version": "1.0",
+                    "Non-Transaction": false
                 }
             };
             var req = http.request(options, function (res) {
@@ -122,19 +137,23 @@ function OfflineSignProvider(provider_url, sign_service_url, accounts, aesKey, e
                 res.on("end", () => {
                     var resultJson = JSON.parse(result);
 
-                    var rsvJsonStr = aesutil.decryption(resultJson.data.signedTransaction, config.aesKey);
-                    console.log("½âÃÜºóµÄÊı¾İStr: ");
-                    console.log(JSON.stringify(rsvJsonStr));
-
-                    var rsvJsonData = JSON.parse(rsvJsonStr);
-                    var signedData = rsvJsonData.r + rsvJsonData.s + rsvJsonData.v
-                    console.log("×éºÏºóµÄÇ©ÃûÊı¾İ:");
-                    console.log(signedData);
-
-                    if (!signedData.startsWith('0x')){
-                        cb('0x' + signedData);
+                    if (resultJson.code != 0){
+                        cb("ç­¾åæœåŠ¡å‡ºé”™: " + resultJson.message);
                     }else {
-                        cb(signedData);//·µ»Ø
+                        var rsvJsonStr = aesutil.decryption(resultJson.data.signedTransaction, aesKey);
+                        console.log("è§£å¯†åçš„æ•°æ®Str: ");
+                        console.log(JSON.stringify(rsvJsonStr));
+
+                        var rsvJsonData = JSON.parse(rsvJsonStr);
+                        var signedData = rsvJsonData.r + rsvJsonData.s + rsvJsonData.v
+                        console.log("ç­¾åäº¤æ˜“æ•°æ®:");
+                        console.log(signedData);
+
+                        if (!signedData.startsWith('0x')){
+                            cb('0x' + signedData);
+                        }else {
+                            cb(signedData);
+                        }
                     }
                 });
                 res.on('error', function () {
