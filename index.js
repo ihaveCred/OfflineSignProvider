@@ -9,12 +9,14 @@ const url = require('url');
 const Web3 = require("web3");
 const ethUtil = require('ethereumjs-util');
 const aesutil = require("./util/aesutil");
+const config = require('./config');
 
 function OfflineSignProvider(provider_url, sign_service_url, accounts, aesKey, enableZeroEx) {
 
     let http = sign_service_url.startsWith("https") ? require("https") : require("http");
     var urlData = url.parse(sign_service_url);
     this.engine = new ProviderEngine();
+    var web3 = new Web3(this.engine);
 
     let hook = {
         getAccounts: function (cb) {
@@ -23,6 +25,7 @@ function OfflineSignProvider(provider_url, sign_service_url, accounts, aesKey, e
         signTransaction: function (txParams, cb) {
             var options = {
                 hostname: urlData.hostname,
+                port: urlData.port,
                 path: urlData.path,
                 method: 'POST',
                 headers: {
@@ -43,17 +46,36 @@ function OfflineSignProvider(provider_url, sign_service_url, accounts, aesKey, e
                 });
                 res.on("end", () => {
                     //TODO解析
-                    cb(result);//返回
+                    var resultJson = JSON.parse(result);
+
+
+                    var rsvJsonStr = aesutil.decryption(resultJson.data.signedTransaction, config.aesKey);
+                    console.log("解密后的数据Str: ");
+                    console.log(JSON.stringify(rsvJsonStr));
+
+                    var rsvJsonData = JSON.parse(rsvJsonStr);
+                    var signedData = rsvJsonData.r + rsvJsonData.s + rsvJsonData.v
+                    console.log("组合后的签名数据:");
+                    console.log(signedData);
+
+                    if (!signedData.startsWith('0x')){
+                        cb('0x' + signedData);
+                    }else {
+                        cb(signedData);//返回
+                    }
+
                 });
                 res.on('error', function () {
                     cb("response error");
                 });
             });
 
+
             let enc = aesutil.encryption(JSON.stringify(txParams), aesKey);
             let txObj = { address: txParams.from, transaction: enc };
             req.write(JSON.stringify(txObj));
-            req.on('error', function () {
+            req.on('error', function (e) {
+                console.log(e)
                 cb("create request error");
             });
             req.end();
@@ -61,7 +83,7 @@ function OfflineSignProvider(provider_url, sign_service_url, accounts, aesKey, e
     };
 
     if (enableZeroEx) {
-        let signUrlData = url.parse(sign_message_url);
+        let signUrlData = url.parse(sign_service_url);
         hook.signMessage = function (message, cb) {
 
             console.log(message);
@@ -79,6 +101,7 @@ function OfflineSignProvider(provider_url, sign_service_url, accounts, aesKey, e
             let options = {
                 hostname: signUrlData.hostname,
                 path: signUrlData.path,
+                port: signUrlData.port,
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -97,7 +120,22 @@ function OfflineSignProvider(provider_url, sign_service_url, accounts, aesKey, e
                     result += body;
                 });
                 res.on("end", () => {
-                    //TODO
+                    var resultJson = JSON.parse(result);
+
+                    var rsvJsonStr = aesutil.decryption(resultJson.data.signedTransaction, config.aesKey);
+                    console.log("解密后的数据Str: ");
+                    console.log(JSON.stringify(rsvJsonStr));
+
+                    var rsvJsonData = JSON.parse(rsvJsonStr);
+                    var signedData = rsvJsonData.r + rsvJsonData.s + rsvJsonData.v
+                    console.log("组合后的签名数据:");
+                    console.log(signedData);
+
+                    if (!signedData.startsWith('0x')){
+                        cb('0x' + signedData);
+                    }else {
+                        cb(signedData);//返回
+                    }
                 });
                 res.on('error', function () {
                     cb("response error");
@@ -116,23 +154,31 @@ function OfflineSignProvider(provider_url, sign_service_url, accounts, aesKey, e
     this.engine.addProvider(new FiltersSubprovider());
 
     this.engine.addProvider(new Web3Subprovider(new Web3.providers.HttpProvider(provider_url)));
+
+
+    // network connectivity error
+    this.engine.on('error', function(err){
+        // report connectivity errors
+        console.error(err.stack)
+    })
+
     this.engine.start();
 };
 
-ThirdPartySignProvider.prototype.sendAsync = function () {
+OfflineSignProvider.prototype.sendAsync = function () {
     console.log("sendAsync");
     console.log(arguments);
     this.engine.sendAsync.apply(this.engine, arguments);
 };
 
-ThirdPartySignProvider.prototype.send = function () {
+OfflineSignProvider.prototype.send = function () {
     console.log("send");
     console.log(arguments);
     return this.engine.send.apply(this.engine, arguments);
 };
 
 // returns the address of the given address_index, first checking the cache
-ThirdPartySignProvider.prototype.getAddress = function (idx) {
+OfflineSignProvider.prototype.getAddress = function (idx) {
     console.log("getAddress");
     console.log(arguments);
     console.log('getting addresses', this.addresses[0], idx)
@@ -141,7 +187,7 @@ ThirdPartySignProvider.prototype.getAddress = function (idx) {
 }
 
 // returns the addresses cache
-ThirdPartySignProvider.prototype.getAddresses = function () {
+OfflineSignProvider.prototype.getAddresses = function () {
     return this.addresses;
 }
 
