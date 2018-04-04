@@ -1,2 +1,2 @@
-# offlineSignProvider
-This is a customized Ethereum web3-provider to facilitate separation of business layer and wallet layer
+# OfflineSignProvider
+This is a custom Ethereum web3 provider to facilitate the separation of business layer and wallet layer.
