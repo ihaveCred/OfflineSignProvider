@@ -1,5 +1,5 @@
-<<<<<<< HEAD
-# offlineSignProvider
+
+# OfflineSignProvider
 This is a customized Ethereum web3-provider to facilitate separation of business layer and wallet layer
 ## Install
 
@@ -42,7 +42,4 @@ param2: The signature service url.
 param3: Array format account address, that sign service will use one of them to signature the transaction data .
 param4: AES key defined with the signature service.
 param5: Use 0Ex or not.
-=======
-# OfflineSignProvider
-This is a custom Ethereum web3 provider to facilitate the separation of business layer and wallet layer.
->>>>>>> 9d2564f66e1dd0dd3b664b21de380cbc9ab90d06
+
