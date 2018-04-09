@@ -17,7 +17,7 @@ function encryption(data, key, iv) {
 /**
  * aes decrypt
  * @param data Content to be decrypted
- * @param key 必须为32位私钥
+ * @param key 16 bytes aes key
  * @returns {string}
  */
 function decryption(data, key, iv) {
