@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/libracredit/offlineSignProvider.git"
+    "url": "git+https://github.com/libracredit/OfflineSignProvider.git"
   },
   "keywords": [
     "offline",
