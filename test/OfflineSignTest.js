@@ -43,10 +43,10 @@ async function submitTransaction() {
 
     var data = {
         gas: '3100000',
-        gasPrice: '90',
+        gasPrice: '10',
         value:'0'
     }
-    var transactionResult = await instance.submitTransaction("0xa9e045eef5d8289872ab3b79b5ac58cbc40db6ff", web3.toWei('0.029', 'ether'), "", data).catch(console.log);
+    var transactionResult = await instance.submitTransaction("0xa9e045eef5d8289872ab3b79b5ac58cbc40db6ff", web3.toWei('0.03', 'ether'), "", data).catch(console.log);
 
     console.log("transactionResult: " + transactionResult)
 

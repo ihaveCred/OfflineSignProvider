@@ -49,15 +49,15 @@ function OfflineSignProvider(provider_url, sign_service_url, accounts, aesKey, e
 
 
                     if (resultJson.code != 0){
-                        cb("签名服务出错: " + resultJson.message);
+                        cb("Signature service error: " + resultJson.message);
                     }else {
                         var rsvJsonStr = aesutil.decryption(resultJson.data.signedTransaction, aesKey);
-                        console.log("解密后的数据Str: ");
+                        console.log("Decrypt transaction json data : ");
                         console.log(JSON.stringify(rsvJsonStr));
 
                         var rsvJsonData = JSON.parse(rsvJsonStr);
                         var signedData = rsvJsonData.r + rsvJsonData.s;
-                        console.log("签名交易数据:");
+                        console.log("Signature data:");
                         console.log(signedData);
 
                         var v = web3.toDecimal(rsvJsonData.v) - 27;
@@ -81,10 +81,10 @@ function OfflineSignProvider(provider_url, sign_service_url, accounts, aesKey, e
             let enc = aesutil.encryption(JSON.stringify(txParams), aesKey);
             let txObj = { address: txParams.from, transaction: enc };
 
-            console.log("交易明文：");
+            console.log("transaction data：");
             console.log(JSON.stringify(txParams));
 
-            console.log('发送交易：');
+            console.log('send signed transaction data：');
             console.log(JSON.stringify(txObj));
 
             req.write(JSON.stringify(txObj));
@@ -138,15 +138,15 @@ function OfflineSignProvider(provider_url, sign_service_url, accounts, aesKey, e
                     var resultJson = JSON.parse(result);
 
                     if (resultJson.code != 0){
-                        cb("签名服务出错: " + resultJson.message);
+                        cb("Signature service error:: " + resultJson.message);
                     }else {
                         var rsvJsonStr = aesutil.decryption(resultJson.data.signedTransaction, aesKey);
-                        console.log("解密后的数据Str: ");
+                        console.log("Decrypt transaction json data: ");
                         console.log(JSON.stringify(rsvJsonStr));
 
                         var rsvJsonData = JSON.parse(rsvJsonStr);
                         var signedData = rsvJsonData.r + rsvJsonData.s + rsvJsonData.v
-                        console.log("签名交易数据:");
+                        console.log("Signature data: ");
                         console.log(signedData);
 
                         if (!signedData.startsWith('0x')){

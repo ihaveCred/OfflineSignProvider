@@ -2,9 +2,9 @@
 const crypto = require("crypto");
 
 /**
- * aes加密
- * @param data 待加密内容
- * @param key 必须为32位私钥
+ * aes encrypt
+ * @param data Content to be encrypted
+ * @param key 16 bytes aes key
  * @returns {string}
  */
 function encryption(data, key, iv) {
@@ -15,8 +15,8 @@ function encryption(data, key, iv) {
 }
 
 /**
- * aes解密
- * @param data 待解密内容
+ * aes decrypt
+ * @param data Content to be decrypted
  * @param key 必须为32位私钥
  * @returns {string}
  */
