@@ -1,7 +1,7 @@
 //config aes key
 
 var config = {
-    aesKey: 'cnVaaWtLWmpqRjFOQWFjS2ZBbDlpUT09'
+    aesKey: 'xxxx'
 };
 
 module.exports = config;
