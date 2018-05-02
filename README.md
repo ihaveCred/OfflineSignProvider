@@ -35,15 +35,15 @@ You can use this provider wherever a Web3 provider is needed.
                 
 Parameters:
 
-    var providerNew = new OfflineSignProvider(nodeUrl, signServiceUrl, [account1,account2,...], config.aesKey);
+    ege: var providerNew = new OfflineSignProvider(nodeUrl, signServiceUrl, [account1,account2,...], config.aesKey);
     
-param1: The eth network node url.
 
-param2: The signature service url.
 
-param3: Array format account address, that sign service will use one of them to signature the transaction data .
-
-param4: AES key defined with the signature service.
-
-param5: boolean, Use 0x or not. If you need sign the message offline When you use 0x project, this param must be 'true'.
+|Name||Type|Description|
+|:----    |:---|:----- |-----   |
+|nodeUrl |string |The eth network node url   |
+|signServiceUrl |string |The signature service url   |
+|accounts |array |Array format account address, that sign service will use one of them to signature the transaction data   |
+|aesKey |string |AES key defined with the signature service   |
+|enableOx |boolean |Use 0x or not. If you need sign the message offline When you use 0x project, this param must be 'true'   |
 
