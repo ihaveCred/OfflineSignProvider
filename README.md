@@ -45,5 +45,5 @@ param3: Array format account address, that sign service will use one of them to 
 
 param4: AES key defined with the signature service.
 
-param5: Use 0Ex or not.
+param5: boolean, Use 0x or not. If you need sign the message offline When you use 0x project, this param must be 'true'.
 
