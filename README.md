@@ -35,7 +35,7 @@ You can use this provider wherever a Web3 provider is needed.
                 
 Parameters:
 
-    ege: var providerNew = new OfflineSignProvider(nodeUrl, signServiceUrl, [account1,account2,...], config.aesKey);
+        example: var providerNew = new OfflineSignProvider(nodeUrl, signServiceUrl, [account1,account2,...], config.aesKey);
     
 
 
