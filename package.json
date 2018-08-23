@@ -1,31 +1,18 @@
 {
-  "name": "libra-offlinesign-provider",
-  "version": "0.0.2",
-  "description": "libra offline sign provider",
+  "name": "offlinesignprovider",
+  "version": "0.2.1",
+  "description": "offlinesignprovider",
   "main": "index.js",
   "author": {
     "name": "libracredit"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/libracredit/OfflineSignProvider.git"
-  },
-  "keywords": [
-    "offline",
-    "sign",
-    "provider"
-  ],
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/libracredit/offlineSignProvider/issues"
-  },
-  "homepage": "https://github.com/libracredit/offlineSignProvider#readme",
+  "license": "MIT",
   "dependencies": {
-    "web3": "^0.18.2",
-    "web3-provider-engine": "^8.4.00",
-    "truffle-contract": "^3.0.4"
+    "aws-sdk": "^2.299.0",
+    "web3": "^1.0.0-beta.35"
+  },
+  "scripts": {
+    "encrypt": "node ./KMS.js encrypt",
+    "decrypt": "node ./KMS.js decrypt"
   }
 }
