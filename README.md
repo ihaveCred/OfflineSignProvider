@@ -8,7 +8,6 @@ npm encrypt {accessKeyId} {region} {secretAccessKey} {keyId} {privateKey}
 npm decrypt {accessKeyId} {region} {secretAccessKey} {encodedPrivateKey}
 ```
 
-
 provider usage
 ```
 let Web3 = require('web3');
