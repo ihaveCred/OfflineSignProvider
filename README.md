@@ -1,5 +1,5 @@
 # offlineSignProvider
-This is a customized Ethereum web3-provider to facilitate separation of business layer and wallet layer
+This is a customized Ethereum web3-provider to facilitate separation of business layer and wallet layer. With AWS KMS support.
 
 encrypt\decrpty command line usage
 
@@ -14,9 +14,9 @@ let Web3 = require('web3');
 const Provider = require("offlinesignprovider");
 var baseProvider = new Web3.providers.HttpProvider("https://kovan.infura.io/xxxxxxx");
 var web3 = new Web3(new Provider(baseProvider, [{ address: "0x000000000", encodedKey: "aaaabbbccceedd" }], {
-    accessKeyId,     //KMS accessKeyId
-    region,          //KMS region
-    secretAccessKey  //KMS secretAccessKey
+    accessKeyId,     //AWS KMS accessKeyId
+    region,          //AWS KMS region
+    secretAccessKey  //AWS KMS secretAccessKey
 }));
 
 web3.eth.sendTransaction(tx);// send tx
